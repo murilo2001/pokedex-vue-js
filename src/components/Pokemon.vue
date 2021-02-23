@@ -1,23 +1,16 @@
 <template>
     <div>
-        <!-- <h1>{{numPokemon}} - {{nome | ucwords}}</h1>
-        <small>{{url}}</small> -->
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" :src="this.pokemon.frontImage" alt="image not found">
+        <div class="card" style="width: 18rem;" @click.prevent="redirectToInformationPoke(nome)">
+            <img class="card-img-top mouse-effect" :src="this.pokemon.frontImage" alt="image not found">
             <div class="card-body">
                 <h5 class="card-title">#{{numPokemon}} - {{nome | ucwords}}</h5>
-                <ul>
-                    <li class="card-text" v-for="   (type,indice) in this.pokemon.type" :key="indice">
-                        <span class="border">{{type.type.name}}</span>
-                        <span class="tt">{{type.type.name}}</span>
-                    </li>
-                </ul>
-                <!-- <p class="card-text">{{v-for this.pokemon.type}}</p> -->
-                <a href="#" class="btn btn-primary">Mais informações</a>
+                    <span v-for="(type,indice) in this.pokemon.type" :key="indice">
+                        <p class="card-text border" :style="stylizeType(type.type.name)">{{type.type.name | ucwords}}</p>
+                    </span>
+                 <!-- <a href="#" class="btn btn-primary">Mais informações</a> -->
             </div>
         </div>
-
-    </div>
+  </div>
 </template>
 
 <script>
@@ -39,28 +32,137 @@ export default {
             }
         };
     },
-    props: {nome: String, url: String, numPokemon: Number}
+    props: {nome: String, url: String, numPokemon: Number},
+    methods:{
+        stylizeType(type){
+            switch(type) {
+              case 'bug':
+                return{
+                    backgroundColor:"#729F3F",
+                    color:"white"
+                }
+              case "poison":
+                return{
+                    backgroundColor:"#B97FC9",
+                    color:"white"
+                }
+              case "water":
+                return{
+                    backgroundColor:"#4592C4",
+                    color:"white"
+                }
+              case "flying":
+                return{
+                    backgroundColor:"#A890F0",
+                    color: "white"
+                }
+              case "normal":
+                return{
+                    backgroundColor:"#A4ACAF" 
+                }
+              case "electric":
+                return{
+                    backgroundColor:"#EED535" 
+                }
+              case "ground":
+                return{
+                    backgroundColor:"#E0C068"
+                }
+              case "fairy":
+                return{
+                    backgroundColor:"#F1B7E9"
+                }
+              case "fire":
+                return{
+                    backgroundColor:"#F17A22",
+                    color:"white"
+                }
+              case "grass":
+                return{
+                    backgroundColor:"#9BCC50",
+                }
+              case "fighting":
+                return{
+                    backgroundColor:"#D56723",
+                    color: "white" 
+                }
+              case "psychic":
+                return{
+                    backgroundColor:"#EB6DB9",
+                    color: "white"
+                }
+              case "rock":
+                return{
+                    backgroundColor:"#A38C21" 
+                }
+              case "steel":
+                return{
+                    backgroundColor:"#9EB7B8" 
+                }
+              case "ghost":
+                return{
+                    backgroundColor:"#7B62A3",
+                    color:"white" 
+                }
+              case "ice":
+                return{
+                    backgroundColor:"#51C4E7" 
+                }
+              case "dragon":
+                return{
+                    backgroundColor:"#7B73F8",
+                    color: "white"
+                }
+              case "dark":
+                return{
+                    backgroundColor:"#707070",
+                    color:"white" 
+                }
+            }
+        },
+        redirectToInformationPoke(nome){
+            window.location.href = nome;
+        }
+    }
 }
 </script>
 
 <style>
-    li {
-      list-style-type: none;
-      display: inline-block;
-    }
 
-p{
-    background-color: blueviolet;
-    color: gold;
-    padding: 10px;
-    font-family: Arial, Helvetica, sans-serif
+.teste{
+    display: inline-block;
+    padding: 1rem;
 }
 
-.tt{
-    width:100px;
-    background-color: rgb(127, 187, 137);
+.mouse-effect{
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.mouse-effect:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.border{
+    margin: 0 auto;
+    left: 100%;
+    width: 130px;
+    font-size: 14px;
+    padding: 3px;
     border:solid 2px;
     border-radius:0px 20px 0px 20px;
 }
 
+
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.container {
+  padding: 2px 16px;
+}
 </style>
