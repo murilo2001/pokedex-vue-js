@@ -17,11 +17,10 @@
 import axios from 'axios';
 export default {
     created(){  /* metodo que será iniciado apos o componente Pokemon for criado */
-        axios.get(this.url).then(resposta => { /* irá ser feito uma requisição para todos pokemons */
-            this.pokemon.type = resposta.data.types; //[0].type.name;
-            this.pokemon.frontImage = resposta.data.sprites.front_default; //sprit de frente
-            this.pokemon.backImage = resposta.data.sprites.back_default; //sprite de costa
-        });
+      axios.get(this.url).then(resposta => { /* irá ser feito uma requisição para todos pokemons */
+          this.pokemon.type = resposta.data.types; //[0].type.name;
+          this.pokemon.frontImage = resposta.data.sprites.front_default; //sprit de frente
+      });
     },
     data(){
         return{
@@ -129,11 +128,6 @@ export default {
 
 <style>
 
-.teste{
-    display: inline-block;
-    padding: 1rem;
-}
-
 .mouse-effect{
     transition: all 0.5s;
     cursor: pointer;
@@ -154,15 +148,9 @@ export default {
     border-radius:0px 20px 0px 20px;
 }
 
-
-
 .card {
-  /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
 }
 
-.container {
-  padding: 2px 16px;
-}
 </style>
