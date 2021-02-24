@@ -1,6 +1,6 @@
 <template>
   <!-- CRIAR COMPONENTE DE SEARCH SEM FALTA-->
-  <span id="app">
+  <!-- <span id="app">
     <header-site></header-site>
     <div v-show="visao === 'allPokemons'">
       <div class="input-group col-md-4" id="input-search">
@@ -17,7 +17,6 @@
       <br>
       <div class="row row-margin">
         <div v-for="(poke,index) in limitExibCard" :key="poke.url">
-          <!-- <pokemon v-bind:class="['row']" :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon> -->
           <pokemon @altera-visao="alteraVisao($event)" :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon>
         </div>
       </div>
@@ -26,8 +25,10 @@
     <div v-show="visao === 'detalhes'">
       <detalhes-poke :nome="this.nomePokeDetalhes" :url="this.urlPokeDetalhes" :numPokemon="numPokemonDetalhes"></detalhes-poke>
     </div>
-
-  </span>
+  </span> -->
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
