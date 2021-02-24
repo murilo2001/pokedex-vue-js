@@ -27,7 +27,8 @@ export default {
             pokemon: {
                 type:"",
                 frontImage:"",
-                backImage:""
+                backImage:"",
+                visao: 'detalhes'
             }
         };
     },
@@ -120,7 +121,10 @@ export default {
             }
         },
         redirectToInformationPoke(nome){
-            window.location.href = nome;
+            this.$emit('altera-visao', {visao: 'detalhes', nome: this.nome, url: this.url, numPokemon: this.numPokemon});
+            //this.$emit('altera-visao', {visao: 'detalhes'});
+            console.log(nome);
+            //window.location.href = nome;
         }
     }
 }

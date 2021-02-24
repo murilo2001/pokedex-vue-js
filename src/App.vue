@@ -2,26 +2,31 @@
   <!-- CRIAR COMPONENTE DE SEARCH SEM FALTA-->
   <span id="app">
     <header-site></header-site>
-    <div class="input-group col-md-4" id="input-search">
-      <input type="search" class="form-control" placeholder="Search" v-model="busca">
-      <button type="button" class="btn btn-primary">
-        <b-icon icon="search"></b-icon>
-      </button>
-      <select class="form-select form-select-sm" @change="onChange($event)">
-        <option selected>seleção de filtros</option>
-        <option value="name">nome</option>
-        <option value="type">tipo</option>
-      </select>
+    <div v-show="visao === 'allPokemons'">
+      <div class="input-group col-md-4" id="input-search">
+        <input type="search" class="form-control" placeholder="Search" v-model="busca">
+        <button type="button" class="btn btn-primary">
+          <b-icon icon="search"></b-icon>
+        </button>
+        <select class="form-select form-select-sm" @change="onChange($event)">
+          <option selected>seleção de filtros</option>
+          <option value="name">nome</option>
+          <option value="type">tipo</option>
+        </select>
+      </div>
+      <br>
+      <div class="row row-margin">
+        <div v-for="(poke,index) in limitExibCard" :key="poke.url">
+          <!-- <pokemon v-bind:class="['row']" :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon> -->
+          <pokemon @altera-visao="alteraVisao($event)" :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon>
+        </div>
+      </div>
+      <button id="ver-mais" @click.prevent="verMais()">Ver mais...</button>
+    </div>
+    <div v-show="visao === 'detalhes'">
+      <detalhes-poke :nome="this.nomePokeDetalhes" :url="this.urlPokeDetalhes" :numPokemon="numPokemonDetalhes"></detalhes-poke>
     </div>
 
-    <br>
-    <div class="row row-margin">
-      <div v-for="(poke,index) in limitExibCard" :key="poke.url">
-        <!-- <pokemon v-bind:class="['row']" :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon> -->
-        <pokemon :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon>
-      </div>
-    </div>
-    <button id="ver-mais" @click.prevent="verMais()">Ver mais...</button>
   </span>
 </template>
 
@@ -37,7 +42,13 @@ export default {
       filtroBusca: {},
       busca:'',
       listaPokemons: [],
-      sliceEndIndex: 12
+      sliceEndIndex: 12,
+      visao: 'allPokemons',
+
+      /* atributos para mostrar detalhes do poke */
+      nomePokeDetalhes: '', 
+      urlPokeDetalhes: '', 
+      numPokemonDetalhes: 0
     };
   },
   created(){  //metodo que será iniciado apos o componente App for criado
@@ -52,6 +63,14 @@ export default {
     onChange(event) {
       this.filtroBusca = event.target.value;
         console.log(this.filtroBusca);
+    },
+    //alteraVisao({visao}){
+    alteraVisao({visao, nome, url, numPokemon}){
+      //console.log('cheguei aqui');
+      this.visao = visao;
+      this.nomePokeDetalhes = nome;
+      this.urlPokeDetalhes = url;
+      this.numPokemonDetalhes = numPokemon;
     }
   },
   computed: {
