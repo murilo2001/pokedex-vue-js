@@ -29,7 +29,7 @@ export default new Router({
             component: Home
         },
         {
-            path: '/detalhes',
+            path: '/detalhes/:idPokemon',
             name: 'sobre',
             component: Detalhes
         }

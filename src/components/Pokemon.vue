@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card" style="width: 18rem;" @click.prevent="redirectToInformationPoke(nome)">
+        <div class="card" style="width: 18rem;" @click.prevent="redirectToDetalhes(numPokemon)">
             <img class="card-img-top mouse-effect" :src="this.pokemon.frontImage" alt="image not found">
             <div class="card-body">
                 <h5 class="card-title">#{{numPokemon}} - {{nome | ucwords}}</h5>
@@ -28,7 +28,6 @@ export default {
                 type:"",
                 frontImage:"",
                 backImage:"",
-                visao: 'detalhes'
             }
         };
     },
@@ -120,11 +119,8 @@ export default {
                 }
             }
         },
-        redirectToInformationPoke(nome){
-            this.$emit('altera-visao', {visao: 'detalhes', nome: this.nome, url: this.url, numPokemon: this.numPokemon});
-            //this.$emit('altera-visao', {visao: 'detalhes'});
-            console.log(nome);
-            //window.location.href = nome;
+        redirectToDetalhes(id){
+            this.$router.push('detalhes/'+id);
         }
     }
 }

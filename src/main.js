@@ -9,6 +9,7 @@ import BarSearch from './components/BarSearch.vue';
 import HeaderSite from './components/HeaderSite.vue';
 import DetalhesPoke from './components/DetalhesPoke.vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+import EvolutionPoke from './components/EvolutionPoke.vue';
 
 
 window.jQuery = window.$ = $;
@@ -26,6 +27,7 @@ Vue.component('pokemon', Pokemon);
 Vue.component('bar-search', BarSearch);
 Vue.component('header-site', HeaderSite);
 Vue.component('detalhes-poke', DetalhesPoke);
+Vue.component('evolution-poke', EvolutionPoke);
 
 
 new Vue({

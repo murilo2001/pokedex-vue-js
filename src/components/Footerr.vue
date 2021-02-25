@@ -8,7 +8,7 @@
 export default {
     data(){
         return {
-            footerText: 'Copyright anno 2021'
+            footerText: 'Copyright @2021'
         };
     }
 }
@@ -16,9 +16,8 @@ export default {
 
 <style scoped>
     footer{
-        background-color: lightcyan;
+        background-color: rgb(216, 216, 216);
         padding: 10px;
         text-align: center;
-        
     }
 </style>
