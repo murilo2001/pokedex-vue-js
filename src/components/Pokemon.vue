@@ -1,13 +1,12 @@
 <template>
     <div>
-        <div class="card" style="width: 18rem;" @click.prevent="redirectToDetalhes(numPokemon)">
+        <div class="card" style="width: 18rem;" @click.prevent="redirectToDetalhes(numPokemon,nome)">
             <img class="card-img-top mouse-effect" :src="this.pokemon.frontImage" alt="image not found">
             <div class="card-body">
                 <h5 class="card-title">#{{numPokemon}} - {{nome | ucwords}}</h5>
                     <span v-for="(type,indice) in this.pokemon.type" :key="indice">
                         <p class="card-text border" :style="stylizeType(type.type.name)">{{type.type.name | ucwords}}</p>
                     </span>
-                 <!-- <a href="#" class="btn btn-primary">Mais informações</a> -->
             </div>
         </div>
   </div>
@@ -16,12 +15,13 @@
 <script>
 import axios from 'axios';
 export default {
-    created(){  /* metodo que será iniciado apos o componente Pokemon for criado */
-      axios.get(this.url).then(resposta => { /* irá ser feito uma requisição para todos pokemons */
-          this.pokemon.type = resposta.data.types; //[0].type.name;
-          this.pokemon.frontImage = resposta.data.sprites.front_default; //sprit de frente
+    created(){  
+      axios.get(this.url).then(resposta => {
+          this.pokemon.type = resposta.data.types;
+          this.pokemon.frontImage = resposta.data.sprites.front_default;
       });
     },
+    props: {nome: String, url: String, numPokemon: Number},
     data(){
         return{
             pokemon: {
@@ -31,7 +31,6 @@ export default {
             }
         };
     },
-    props: {nome: String, url: String, numPokemon: Number},
     methods:{
         stylizeType(type){
             switch(type) {
@@ -119,8 +118,9 @@ export default {
                 }
             }
         },
-        redirectToDetalhes(id){
-            this.$router.push('detalhes/'+id);
+        redirectToDetalhes(id,nome){
+            this.$router.push('/'+id+'/'+nome);
+            //this.$router.go();
         }
     }
 }

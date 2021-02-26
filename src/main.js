@@ -6,11 +6,9 @@ import $ from 'jquery';
 import PopperJs from 'popper.js';
 import Pokemon from './components/Pokemon.vue';
 import BarSearch from './components/BarSearch.vue';
-import HeaderSite from './components/HeaderSite.vue';
-import DetalhesPoke from './components/DetalhesPoke.vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import EvolutionPoke from './components/EvolutionPoke.vue';
-
+import GraficoAtributos from './components/GraficoAtributos.vue';
 
 window.jQuery = window.$ = $;
 window.Popper = PopperJs;
@@ -25,9 +23,8 @@ Vue.use(BootstrapVueIcons);
 
 Vue.component('pokemon', Pokemon);
 Vue.component('bar-search', BarSearch);
-Vue.component('header-site', HeaderSite);
-Vue.component('detalhes-poke', DetalhesPoke);
 Vue.component('evolution-poke', EvolutionPoke);
+Vue.component('grafico-atributos', GraficoAtributos);
 
 
 new Vue({

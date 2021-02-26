@@ -1,31 +1,4 @@
 <template>
-  <!-- CRIAR COMPONENTE DE SEARCH SEM FALTA-->
-  <!-- <span id="app">
-    <header-site></header-site>
-    <div v-show="visao === 'allPokemons'">
-      <div class="input-group col-md-4" id="input-search">
-        <input type="search" class="form-control" placeholder="Search" v-model="busca">
-        <button type="button" class="btn btn-primary">
-          <b-icon icon="search"></b-icon>
-        </button>
-        <select class="form-select form-select-sm" @change="onChange($event)">
-          <option selected>seleção de filtros</option>
-          <option value="name">nome</option>
-          <option value="type">tipo</option>
-        </select>
-      </div>
-      <br>
-      <div class="row row-margin">
-        <div v-for="(poke,index) in limitExibCard" :key="poke.url">
-          <pokemon @altera-visao="alteraVisao($event)" :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon>
-        </div>
-      </div>
-      <button id="ver-mais" @click.prevent="verMais()">Ver mais...</button>
-    </div>
-    <div v-show="visao === 'detalhes'">
-      <detalhes-poke :nome="this.nomePokeDetalhes" :url="this.urlPokeDetalhes" :numPokemon="numPokemonDetalhes"></detalhes-poke>
-    </div>
-  </span> -->
   <div id="app">
     <router-view></router-view>
   </div>
@@ -33,64 +6,6 @@
 
 <script>
 
-import axios from 'axios';
-
-import _ from 'lodash';
-
-export default {
-  data(){
-    return {
-      filtroBusca: {},
-      busca:'',
-      listaPokemons: [],
-      sliceEndIndex: 12,
-      visao: 'allPokemons',
-
-      /* atributos para mostrar detalhes do poke */
-      nomePokeDetalhes: '', 
-      urlPokeDetalhes: '', 
-      numPokemonDetalhes: 0
-    };
-  },
-  created(){  //metodo que será iniciado apos o componente App for criado
-    axios.get("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0").then(resposta => { //resgata os pokemons da api pokeapi e retorna uma promessa (promise)
-      this.listaPokemons = resposta.data.results;
-    });
-  },
-  methods: {
-    verMais(){
-      this.sliceEndIndex +=12;
-    },
-    onChange(event) {
-      this.filtroBusca = event.target.value;
-        console.log(this.filtroBusca);
-    },
-    //alteraVisao({visao}){
-    alteraVisao({visao, nome, url, numPokemon}){
-      //console.log('cheguei aqui');
-      this.visao = visao;
-      this.nomePokeDetalhes = nome;
-      this.urlPokeDetalhes = url;
-      this.numPokemonDetalhes = numPokemon;
-    }
-  },
-  computed: {
-    limitExibCard: function () {
-      return this.pokemonsFiltrados.slice(0, this.sliceEndIndex)
-    },
-    pokemonsFiltrados(){
-      return _.filter(this.listaPokemons, pokemon => {
-        var busca = this.busca.toLowerCase();
-
-        if(this.filtroBusca == 'type'){
-          return pokemon.type.toLowerCase().indexOf(busca) >= 0;
-        }else{
-          return pokemon.name.toLowerCase().indexOf(busca) >= 0;
-        }
-      })
-    }
-  }
-}
 </script>
 
 <style>
@@ -103,11 +18,7 @@ export default {
   margin-top: 60px;
 }
 
-#input-search{
-  padding-top: 30px;
-  text-align: center;
-  margin: 0 auto;
-}
+
 
 .btn-primary {
   background-color:#9FCF78;
@@ -120,7 +31,7 @@ export default {
 }
 
 .row-margin {
-  margin: auto 85px;
+  margin: auto;
 }
 
 #ver-mais{

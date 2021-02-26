@@ -1,12 +1,12 @@
 <template>
     <div>  
-    <headerr></headerr>
-    <!-- <h1 class="card-title">{{nome | ucwords}}</h1> -->
+    <header-site></header-site>
+    <br>
     <div class="grid-container">
-        <div class="versao-poke">  
+        <div class="versao-poke"></div>
+        <div class="type-poke">
             <h1>#{{this.pokemon.id}} - {{this.pokemon.nome | ucwords}}</h1>
         </div>
-        <div class="type-poke"><h2>type-poke</h2></div>
             <div class="image-poke">
                 <img :src="this.pokemon.frontImage" alt="">
             </div>
@@ -14,7 +14,7 @@
                 <div class="atributos-poke">
                     <span class="font-size font-weight-bold">Tipo: </span>
                         <span v-for="(tipo,indice) in this.pokemon.tipos" :key="indice">
-                            <span class="type-border" :style="stylizeType(tipo.type.name)">{{tipo.type.name | ucwords}}</span>
+                        <span class="type-border" :style="stylizeType(tipo.type.name)">{{tipo.type.name | ucwords}}</span>
                     </span>
                     <ul class="list-group" style="list-style: none;">
                         <li class="list-group-item d-flex justify-content-between align-items-center">altura: {{this.pokemon.altura}}</li>
@@ -35,10 +35,22 @@
                         </li>
                     </ul>
                     </div>
-                <div class="footer-grid"><h2>footer-grid</h2></div>
-            <div class="evolucao-poke">
-                <evolution-poke :imageEvo1="this.pokemon.frontImage" :imageEvo2="this.pokemon.frontImageEvo2" :imageEvo3="this.pokemon.frontImageEvo3"></evolution-poke>    
-            </div>
+                    <div class="footer-grid">
+                        <div class="grafico-size">
+                            <grafico-atributos
+                                :colorGraph="this.pokemon.corPredominante"
+                                :hp="this.pokemon.hp" 
+                                :attack="this.pokemon.attack" 
+                                :defense="this.pokemon.defense" 
+                                :specialAttack="this.pokemon.specialAttack" 
+                                :specialDefense="this.pokemon.specialDefense" 
+                                :speed="this.pokemon.speed">
+                            </grafico-atributos>
+                        </div>
+                    </div>
+                <div class="evolucao-poke">
+                    <evolution-poke :imageEvo1="this.pokemon.frontImageEvo1" :imageEvo2="this.pokemon.frontImageEvo2" :imageEvo3="this.pokemon.frontImageEvo3"></evolution-poke>    
+                </div>
         </div>
     </div>
 </template>
@@ -48,16 +60,21 @@ import axios from 'axios';
 
 export default {
     name: 'detalhes',
-
     created(){
         this.preencherObjectPokemon();
+    },
+    updated(){
+        console.log(this.pokemon.attack);
+        console.log(this.pokemon.specialAttack);
     },
     data(){
         return{
             pokemon: {
                 id: "",
                 nome: "",
+                corPredominante: "",
                 frontImage:"",
+                frontImageEvo1: "",
                 frontImageEvo2: "",
                 frontImageEvo3: "",
                 altura: "",
@@ -66,7 +83,15 @@ export default {
                 infoEspecie: "",
                 genero: "",
                 categoria: "",
-                habilidades: []
+                habilidades: [],
+                hp: 0,
+                attack: 0,
+                defense: 0,
+                specialAttack: 0,
+                specialDefense: 0,
+                speed: 0,
+                urlEvolucoes: "",
+                evolucoes: {}
             }
         };
     },
@@ -74,10 +99,11 @@ export default {
         async preencherObjectPokemon(){
             var arrHab = [];
             await axios.all([ 
-                axios.get("https://pokeapi.co/api/v2/pokemon/"+this.$route.params.idPokemon),
-                axios.get("https://pokeapi.co/api/v2/pokemon-species/"+this.$route.params.idPokemon),
-                axios.get("https://pokeapi.co/api/v2/evolution-chain/"+this.$route.params.idPokemon)
-                ]).then(axios.spread((dadosPoke, dadosEspecie, dadosEvolucao) => {
+                axios.get("https://pokeapi.co/api/v2/pokemon/"+this.$route.params.nome),
+                axios.get("https://pokeapi.co/api/v2/pokemon-species/"+this.$route.params.id)
+                ]).then(axios.spread((dadosPoke, dadosEspecie) => {
+                    this.pokemon.corPredominante = dadosEspecie.data.color.name;
+                    console.log(dadosEspecie.data.color.name);
                     this.pokemon.id = dadosPoke.data.id;
                     this.pokemon.nome = dadosPoke.data.name;
                     this.pokemon.frontImage = dadosPoke.data.sprites.other["official-artwork"].front_default;
@@ -89,24 +115,51 @@ export default {
                     });
                     this.pokemon.habilidades = arrHab;
 
+                    this.pokemon.hp = dadosPoke.data.stats[0].base_stat;
+                    this.pokemon.attack = dadosPoke.data.stats[1].base_stat;
+                    this.pokemon.defense = dadosPoke.data.stats[2].base_stat;
+                    this.pokemon.specialAttack = dadosPoke.data.stats[3].base_stat;
+                    this.pokemon.specialDefense = dadosPoke.data.stats[4].base_stat;
+                    this.pokemon.speed = dadosPoke.data.stats[5].base_stat;
+
+                    this.pokemon.urlEvolucoes = dadosEspecie.data.evolution_chain.url;
                     this.pokemon.genero = dadosEspecie.data.gender_rate;
                     this.pokemon.categoria = dadosEspecie.data.genera[7].genus.replace("Pokémon", '');
-
-                    this.pokemon.frontImageEvo2 = dadosEvolucao.data.chain.evolves_to[0].species.name;
-                    this.pokemon.frontImageEvo3 = dadosEvolucao.data.chain.evolves_to[0].evolves_to[0].species.name;
                 }));
-
-                this.preencherObjectPokemonImgEvolution();
-                console.log(this.pokemon.frontImageEvo2);
-                
+                    this.resgataNomeEvolucoesPoke();
         },
-        preencherObjectPokemonImgEvolution(){
+
+        async resgataNomeEvolucoesPoke(){
+            await axios.get(this.pokemon.urlEvolucoes).then(evoChain => {
+
+                /* for para resgatar quantidade de evo dos pokemons posteriormente adiciona
+                cada nome da evolucao dentro do objeto evolucoes 
+
+                this.pokemon.evolucoes[0] = evoChain.data.chain.species.name;
+                for (let [index, evolucao] of evoChain.data.chain.evolves_to.entries()) {
+                    this.pokemon.evolucoes[index+1] = evolucao.species.name;
+
+                }
+                console.log(this.pokemon.evolucoes);
+                */
+
+                this.pokemon.frontImageEvo1 = evoChain.data.chain.species.name;
+                this.pokemon.frontImageEvo2 = evoChain.data.chain.evolves_to[0].species.name;
+                this.pokemon.frontImageEvo3 = evoChain.data.chain.evolves_to[0].evolves_to[0].species.name;
+            });
+
+            this.resgataImgEvolucoesPoke();
+        },
+        
+        resgataImgEvolucoesPoke(){
             axios.all([ 
+                axios.get("https://pokeapi.co/api/v2/pokemon/"+this.pokemon.frontImageEvo1),
                 axios.get("https://pokeapi.co/api/v2/pokemon/"+this.pokemon.frontImageEvo2),
                 axios.get("https://pokeapi.co/api/v2/pokemon/"+this.pokemon.frontImageEvo3)
-                ]).then(axios.spread((dadosEvo1, dadosEvo2) => {
-                    this.pokemon.frontImageEvo2 = dadosEvo1.data.sprites.other["official-artwork"].front_default;
-                    this.pokemon.frontImageEvo3 = dadosEvo2.data.sprites.other["official-artwork"].front_default;
+                ]).then(axios.spread((dadosEvo1, dadosEvo2, dadosEvo3) => {
+                    this.pokemon.frontImageEvo1 = dadosEvo1.data.sprites.other["official-artwork"].front_default;
+                    this.pokemon.frontImageEvo2 = dadosEvo2.data.sprites.other["official-artwork"].front_default;
+                    this.pokemon.frontImageEvo3 = dadosEvo3.data.sprites.other["official-artwork"].front_default;
                 }));
         },
         stylizeType(type){
@@ -195,6 +248,12 @@ export default {
                 }
             }
         }
+    },
+    computed:{
+        /* metodo de teste */
+        datePokeAtt(){
+            return this.pokemon;
+        }
     }
 }
 </script>
@@ -234,4 +293,10 @@ export default {
     margin-right: 310px;
 }
 
+.grafico-size{
+    margin-top: -210px;
+    margin-left: 160px;
+    width: 50%;
+    height:auto;
+}
 </style>

@@ -1,7 +1,6 @@
 <template>
     <div>
-        <headerr></headerr>
-        <h1>PAGINA HOME</h1>
+        <header-site></header-site>
         <div class="input-group col-md-4" id="input-search">
           <input type="search" class="form-control" placeholder="Search" v-model="busca">
           <button type="button" class="btn btn-primary">
@@ -15,8 +14,8 @@
         </div>
         <br>
         <div class="row row-margin">
-          <div v-for="(poke,index) in limitExibCard" :key="poke.url">
-            <pokemon :nome="poke.name" :url="poke.url" :num-pokemon="index+1"></pokemon>
+          <div v-for="poke in limitExibCard" :key="poke.url">
+            <pokemon :nome="poke.name" :url="poke.url" :num-pokemon="resgatarId(poke.url)"></pokemon>
           </div>
         </div>
         <button id="ver-mais" @click.prevent="verMais()">Ver mais...</button>
@@ -31,20 +30,20 @@ import _ from 'lodash';
 export default {
     name: "home",
     data(){
-        return {
+        return{
             filtroBusca: {},
             busca:'',
             listaPokemons: [],
             sliceEndIndex: 12,
-
-            /* atributos para mostrar detalhes do poke */
             nomePokeDetalhes: '', 
             urlPokeDetalhes: '', 
             numPokemonDetalhes: 0
         };
     },
-    created(){  //metodo que será iniciado apos o componente App for criado
-        axios.get("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0").then(resposta => { //resgata os pokemons da api pokeapi e retorna uma promessa (promise)
+    /* created = metodo que sempre é iniciado apos a criação do componente */
+    created(){
+        /* Resgata todos os pokemons da 1 geracao da api POKEAPI e salva o retorno em uma array[] */
+        axios.get("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0").then(resposta => {
           this.listaPokemons = resposta.data.results;
         });
     },
@@ -55,6 +54,10 @@ export default {
         onChange(event) {
             this.filtroBusca = event.target.value;
         },
+        resgatarId(url){
+         var id = url.replace("https://pokeapi.co/api/v2/pokemon/", "");
+          return parseInt(id.replace("/",''));
+        }
     },
     computed: {
         limitExibCard: function () {

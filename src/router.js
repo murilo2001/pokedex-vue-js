@@ -6,8 +6,7 @@ import PopperJs from 'popper.js';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import Home from '../views/Home.vue';
 import Detalhes from '../views/Detalhes.vue';
-import Headerr from '../src/components/Headerr.vue';
-import Footerr from '../src/components/Footerr.vue';
+import HeaderSite from '../src/components/HeaderSite.vue';
 
 window.jQuery = window.$ = $;
 window.Popper = PopperJs;
@@ -17,8 +16,7 @@ Vue.use(BootstrapVueIcons);
 
 Vue.use(Router);
 
-Vue.component('headerr', Headerr);
-Vue.component('footerr', Footerr);
+Vue.component('header-site', HeaderSite);
 
 export default new Router({
     mode: 'history',
@@ -29,7 +27,7 @@ export default new Router({
             component: Home
         },
         {
-            path: '/detalhes/:idPokemon',
+            path: '/:id/:nome',
             name: 'sobre',
             component: Detalhes
         }
